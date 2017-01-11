@@ -14,6 +14,10 @@ import java.util.Scanner;
  */
 public class Main {
 	public static void Main(String[] args) {
+		executeNumberCountCalculator();
+	}
+
+	private static void executeNumberCountCalculator() {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Please enter the number you want to find (0~9)");
 		int inputNumber = scan.nextInt();
