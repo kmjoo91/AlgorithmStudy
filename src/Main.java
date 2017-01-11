@@ -7,6 +7,7 @@
 
 import java.util.Scanner;
 import google.NumberCountCalculator;
+import nexon.GeneratorNumber;
 
 /**
  *
@@ -15,7 +16,22 @@ import google.NumberCountCalculator;
  */
 public class Main {
 	public static void main(String[] args) {
-		executeNumberCountCalculator();
+		//executeNumberCountCalculator();
+		System.out.println(0%2);
+		GeneratorNumber generatorNumber = new GeneratorNumber();
+		int sum2 = 0;
+		for (int i= 1; i <= 5000; i++) {
+			sum2 += i;
+		}
+		System.out.println(sum2);
+		int sum = 0;
+		for (int i= 1; i <= 10; i++) {
+			if (generatorNumber.isGeneratorNumber(i) == false) {
+				System.out.println(i);
+				sum += i;
+			}
+		}
+		System.out.println(sum);
 	}
 
 	private static void executeNumberCountCalculator() {
