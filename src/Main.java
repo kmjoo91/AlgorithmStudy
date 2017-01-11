@@ -13,7 +13,7 @@ import java.util.Scanner;
  * @author kim.minjoo
  */
 public class Main {
-	public static void Main(String[] args) {
+	public static void main(String[] args) {
 		executeNumberCountCalculator();
 	}
 

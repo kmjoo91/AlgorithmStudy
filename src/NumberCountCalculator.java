@@ -1,5 +1,4 @@
-public class NumberCountCalculator {
-
+class NumberCountCalculator {
     public int calculateNumberCount(int inputNumber, int findRange) {
         //1의 자리에 몇번 등장하는지 새는법 10이 커질때 마다 1번씩 등장하므로 나누기 10을 하고 1을 곱하면된다 10으로 나눈 나머지가 8보다 큰 경우 1을 더해주면된다.
         //10의 자리에 몇번 등장하는지 새는법 100이 커질때 마다 10번씩 등장하므로  나누기 100을 하고 10을 곱하면된다. 100으로 나눈 나머지가 8보다 큰 경우 10을 더해주면 된다 8인경우 1의자리만큼..
