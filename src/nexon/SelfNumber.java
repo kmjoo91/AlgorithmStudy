@@ -37,7 +37,7 @@ public class SelfNumber {
 	private boolean[] getSelfNumberFlagArray(int range) {
 		boolean[] selfNumberFlagArray = new boolean[range+1];
 		for (int i = 0; i <= selfNumberFlagArray.length; i++) {
-			int generatorNumber = getGeneratorNumber(i);
+			int generatorNumber = calculateGenerator(i);
 			if (generatorNumber >= selfNumberFlagArray.length) {
 				continue;
 			}
@@ -46,7 +46,7 @@ public class SelfNumber {
 		return selfNumberFlagArray;
 	}
 
-	private int getGeneratorNumber(int targetNumber) {
+	private int calculateGenerator(int targetNumber) {
 		int sum = targetNumber;
 		int cipher = (int)Math.log10(targetNumber);
 		for (int i = 0; i <= cipher; i++) {
@@ -54,5 +54,35 @@ public class SelfNumber {
 			targetNumber /= 10;
 		}
 		return sum;
+	}
+
+	public int getGeneratorNumber(int targetNumber) {
+		int minPossipleNumber = getMinPossibleNumber(targetNumber);
+		int minCipher = (int)Math.log10(minPossipleNumber);
+		int minNumber = 0;
+		for (int i = 1; i <= minCipher; i++) {
+			minNumber += minPossipleNumber/(int)Math.pow(10, i);
+		}
+		int maxCipher = (int)Math.log10(targetNumber);
+		int maxNumber = 0;
+		for (int i = 1; i <= maxCipher; i++) {
+			maxNumber += targetNumber/(int)Math.pow(10, i);
+		}
+
+
+		for (int i = minNumber; i <= maxNumber; i++) {
+			int generatorNumber = (targetNumber + (9 * i)) / 2;
+			int generator = calculateGenerator(generatorNumber);
+			if (generator == targetNumber) {
+				return generatorNumber;
+			}
+		}
+		return -1;
+	}
+
+	private int getMinPossibleNumber(int targetNumber) {
+		int cipher = (int)Math.log10(targetNumber);
+		int maxDistinct = 9*cipher + targetNumber/(int)Math.pow(10,cipher);
+		return targetNumber - maxDistinct;
 	}
 }
