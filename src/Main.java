@@ -7,7 +7,7 @@
 
 import java.util.Scanner;
 import google.NumberCountCalculator;
-import nexon.GeneratorNumber;
+import nexon.SelfNumber;
 
 /**
  *
@@ -17,21 +17,7 @@ import nexon.GeneratorNumber;
 public class Main {
 	public static void main(String[] args) {
 		//executeNumberCountCalculator();
-		System.out.println(0%2);
-		GeneratorNumber generatorNumber = new GeneratorNumber();
-		int sum2 = 0;
-		for (int i= 1; i <= 5000; i++) {
-			sum2 += i;
-		}
-		System.out.println(sum2);
-		int sum = 0;
-		for (int i= 1; i <= 10; i++) {
-			if (generatorNumber.isGeneratorNumber(i) == false) {
-				System.out.println(i);
-				sum += i;
-			}
-		}
-		System.out.println(sum);
+		executePrintSelfNumber();
 	}
 
 	private static void executeNumberCountCalculator() {
@@ -45,5 +31,10 @@ public class Main {
 		int numberCount = numberCountCalculator.calculateNumberCount(inputNumber, findRange);
 
 		System.out.println("Number of appearances : " + numberCount);
+	}
+
+	private static void executePrintSelfNumber() {
+		SelfNumber selfNumber = new SelfNumber();
+		selfNumber.printSelfNumber(500);
 	}
 }
