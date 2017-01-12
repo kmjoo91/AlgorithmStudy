@@ -5,7 +5,7 @@
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package nexon;
+package com.naver.nexon;
 
 /**
  *

@@ -1,4 +1,4 @@
-package google;
+package com.naver.google;
 
 public class NumberCountCalculator {
     public int calculateNumberCount(int inputNumber, int findRange) {

@@ -1,3 +1,4 @@
+package com.naver;
 /*
  *@(#)Main.java 2017.01.11
  *
@@ -6,8 +7,9 @@
  */
 
 import java.util.Scanner;
-import google.NumberCountCalculator;
-import nexon.SelfNumber;
+
+import com.naver.google.NumberCountCalculator;
+import com.naver.nexon.SelfNumber;
 
 /**
  *
