@@ -16,6 +16,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.naver.WordLadder.model.Node;
+
 /**
  *
  *
@@ -130,5 +132,66 @@ public class WordLadder {
 
 	    return distanceArray;
 	}
+
+	public Node<String> getLeaf() {
+		Queue<Node<String>> queue = new LinkedList<Node<String>>();
+		List<String> path = new ArrayList<String>();
+
+
+		queue.offer(new Node<String>(startString));
+		Node<String> currentNode;
+		while ((currentNode = queue.poll()) != null) {
+		 	String str = currentNode.getData();
+			path.add(str);
+			Set<String> oneDistanceWords = getOneDistanceWords(str);
+			for (String oneDistanceWord : oneDistanceWords) {
+				if (path.contains(oneDistanceWord)) {
+					continue;
+				}
+				Node<String> child = new Node<String>(oneDistanceWord);
+				child.setParent(currentNode);
+				if (calculateEditDistance(oneDistanceWord, endString) == 1) {
+					//start랑 end도 디스턴스에 포함.
+					Node<String> leaf = new Node<String>(endString);
+					leaf.setParent(child);
+
+					return leaf;
+				}
+				queue.offer(child);
+			}
+		}
+
+		return new Node<String>(startString);
+	}
+
+	public void printTree() {
+		Queue<Node<String>> queue = new LinkedList<Node<String>>();
+		List<String> path = new ArrayList<String>();
+
+
+		queue.offer(new Node<String>(startString));
+		Node<String> currentNode;
+		while ((currentNode = queue.poll()) != null) {
+			String str = currentNode.getData();
+			path.add(str);
+			Set<String> oneDistanceWords = getOneDistanceWords(str);
+			for (String oneDistanceWord : oneDistanceWords) {
+				if (path.contains(oneDistanceWord)) {
+					continue;
+				}
+				Node<String> child = new Node<String>(oneDistanceWord);
+				child.setParent(currentNode);
+				if (calculateEditDistance(oneDistanceWord, endString) == 1) {
+					//start랑 end도 디스턴스에 포함.
+					Node<String> leaf = new Node<String>(endString);
+					leaf.setParent(child);
+					leaf.printTree();
+				}
+				queue.offer(child);
+			}
+		}
+	}
+
+
 
 }
