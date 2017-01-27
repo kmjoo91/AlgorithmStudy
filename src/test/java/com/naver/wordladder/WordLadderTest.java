@@ -5,14 +5,14 @@
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.naver.WordLadder;
+package com.naver.wordladder;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
 
-import com.naver.WordLadder.model.Node;
+import com.naver.wordladder.model.Node;
 
 /**
  *

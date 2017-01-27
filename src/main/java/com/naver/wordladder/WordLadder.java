@@ -5,7 +5,7 @@
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.naver.WordLadder;
+package com.naver.wordladder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.naver.WordLadder.model.Node;
+import com.naver.wordladder.model.Node;
 
 /**
  *
