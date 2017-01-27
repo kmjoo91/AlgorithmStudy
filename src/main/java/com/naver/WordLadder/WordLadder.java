@@ -182,7 +182,6 @@ public class WordLadder {
 				Node<String> child = new Node<String>(oneDistanceWord);
 				child.setParent(currentNode);
 				if (calculateEditDistance(oneDistanceWord, endString) == 1) {
-					//start랑 end도 디스턴스에 포함.
 					Node<String> leaf = new Node<String>(endString);
 					leaf.setParent(child);
 					leaf.printTree();
