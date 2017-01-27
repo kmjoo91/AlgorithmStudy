@@ -1,4 +1,4 @@
-package com.naver.WordLadder.model;
+package com.naver.wordladder.model;
 
 public  class Node<T> {
         private T data;
