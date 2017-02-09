@@ -26,7 +26,7 @@ public class Main {
 
 	private static void executeEmployeeNumber() {
 		EmployeeNumber employeeNumber = new EmployeeNumber();
-		System.out.println(employeeNumber.getEmployeeNumber("/EmployeeLog.txt", "10:00:00"));
+		System.out.println(employeeNumber.getEmployeeNumber("EmployeeLog.txt", "10:00:00"));
 	}
 
 	private static void executeNumberCountCalculator() {
