@@ -8,6 +8,7 @@ package com.naver;
 
 import java.util.Scanner;
 
+import com.naver.amazon.EmployeeNumber;
 import com.naver.google.NumberCountCalculator;
 import com.naver.nexon.SelfNumber;
 
@@ -19,7 +20,13 @@ import com.naver.nexon.SelfNumber;
 public class Main {
 	public static void main(String[] args) {
 		//executeNumberCountCalculator();
-		executePrintSelfNumber();
+		//executePrintSelfNumber();
+		executeEmployeeNumber();
+	}
+
+	private static void executeEmployeeNumber() {
+		EmployeeNumber employeeNumber = new EmployeeNumber();
+		System.out.println(employeeNumber.getEmployeeNumber("EmployeeLog.txt", "10:00:00"));
 	}
 
 	private static void executeNumberCountCalculator() {
