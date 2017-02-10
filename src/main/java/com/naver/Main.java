@@ -6,10 +6,14 @@ package com.naver;
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 import com.naver.amazon.EmployeeNumber;
 import com.naver.google.NumberCountCalculator;
+import com.naver.google.codejam.CalendarCalculator;
 import com.naver.nexon.SelfNumber;
 
 /**
@@ -18,10 +22,24 @@ import com.naver.nexon.SelfNumber;
  * @author kim.minjoo
  */
 public class Main {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		//executeNumberCountCalculator();
 		//executePrintSelfNumber();
-		executeEmployeeNumber();
+		//executeEmployeeNumber();
+		executeCalendarCalculator();
+	}
+
+	private static void executeCalendarCalculator() throws IOException {
+		BufferedReader in = new BufferedReader(new FileReader("calendarExample.txt"));
+		int maxCase = Integer.parseInt(in.readLine());
+		for (int i=1; i <= maxCase; i++) {
+			String line = in.readLine();
+			String[] inputStr = line.split(" ");
+			CalendarCalculator calendarCalculator = new CalendarCalculator(Long.parseLong(inputStr[0]), Integer.parseInt(inputStr[1]), Integer.parseInt(inputStr[2]));
+			System.out.print("Case #" + i +": ");
+			System.out.println(calendarCalculator.getCalendarLine());
+		}
+		in.close();
 	}
 
 	private static void executeEmployeeNumber() {
