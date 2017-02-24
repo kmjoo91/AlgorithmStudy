@@ -27,6 +27,8 @@ public class WordLadderTest {
 		dictionary.add("hot");
 		dictionary.add("dot");
 		dictionary.add("dog");
+		dictionary.add("doh");
+		dictionary.add("coh");
 		dictionary.add("lot");
 		dictionary.add("log");
 		dictionary.add("cog");
