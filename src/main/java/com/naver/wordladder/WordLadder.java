@@ -168,6 +168,7 @@ public class WordLadder {
 		Queue<Node<String>> queue = new LinkedList<Node<String>>();
 		List<String> path = new ArrayList<String>();
 
+		int shortestPathLength = dictionary.size();
 
 		queue.offer(new Node<String>(startString));
 		Node<String> currentNode;
@@ -181,7 +182,11 @@ public class WordLadder {
 				}
 				Node<String> child = new Node<String>(oneDistanceWord);
 				child.setParent(currentNode);
-				if (calculateEditDistance(oneDistanceWord, endString) == 1) {
+				child.setLevel(currentNode.getLevel()+1);
+
+				if (calculateEditDistance(oneDistanceWord, endString) == 1 && child.getLevel() <= shortestPathLength) {
+					shortestPathLength = child.getLevel();
+					System.out.println(shortestPathLength);
 					Node<String> leaf = new Node<String>(endString);
 					leaf.setParent(child);
 					leaf.printTree();
