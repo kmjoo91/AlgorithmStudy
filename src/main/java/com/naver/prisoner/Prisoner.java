@@ -24,14 +24,7 @@ public class Prisoner {
 	}
 
 	public int getReleasePrisoner(int range) {
-		for (int number = 1; number <= range; number++) {
-			if (number*number > range) {
-				return number-1;
-			}
-		}
-
-		//위에서 끝날 수 박에없음. 따라서 여기로 오면 에러.
-		return -1;
+		return (int) Math.sqrt(range);
 	}
 
 }
