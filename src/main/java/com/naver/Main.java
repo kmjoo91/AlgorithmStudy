@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import com.naver.amazon.EmployeeNumber;
+import com.naver.book.p155.BribeThePrisoners;
 import com.naver.google.NumberCountCalculator;
 import com.naver.google.codejam.CalendarCalculator;
 import com.naver.nexon.SelfNumber;
@@ -26,7 +27,27 @@ public class Main {
 		//executeNumberCountCalculator();
 		//executePrintSelfNumber();
 		//executeEmployeeNumber();
-		executeCalendarCalculator();
+		//executeCalendarCalculator();
+
+		BufferedReader in = new BufferedReader(new FileReader("BribeThePrisoners.txt"));
+		int maxCase = Integer.parseInt(in.readLine());
+		for (int i = 0; i < maxCase; i++) {
+			String line = in.readLine();
+			String[] inputStr = line.split(" ");
+			int prisonRoomNumber = Integer.parseInt(inputStr[0]);
+			int releaseNumber = Integer.parseInt(inputStr[1]);
+
+			line = in.readLine();
+			String[] releasePrisonersString = line.split(" ");
+			int[] releasePrisoners = new int[releasePrisonersString.length];
+			for (int j = 0; j < releasePrisoners.length; j++) {
+				releasePrisoners[j] = Integer.parseInt(releasePrisonersString[j]);
+			}
+
+			BribeThePrisoners bribeThePrisoners = new BribeThePrisoners(prisonRoomNumber, releaseNumber, releasePrisoners);
+			String result = String.format("Case #%d: %d", i+1, bribeThePrisoners.getTotalBribe());
+			System.out.println(result);
+		}
 	}
 
 	private static void executeCalendarCalculator() throws IOException {
