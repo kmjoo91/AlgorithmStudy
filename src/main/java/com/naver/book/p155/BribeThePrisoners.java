@@ -52,7 +52,6 @@ public class BribeThePrisoners {
 
 		for (int i = 0; i < releaseNumber; i++) {
 			int currentReleaseNumber = getReleaseNumber(bribes, bribesCost);
-			System.out.println(currentReleaseNumber);
 
 			totalBribe += prisonRoomNumber - i - 1;
 
@@ -66,14 +65,21 @@ public class BribeThePrisoners {
 			bribesCost[currentReleaseNumber+1]--;
 		}
 
-		System.out.println(totalBribe);
-		return 0;
+		return totalBribe;
 	}
 
 	private int getReleaseNumber(int[] bribes, int[] bribesCost) {
 		int releaseNumber = 0;
-		double releaseCost = bribes[0] / bribesCost[0];
-		for (int i = 1; i < bribes.length; i++) {
+		double releaseCost=0;
+		int startIndex = 0;
+		for (int i = 0; i < bribesCost.length; i++) {
+			if (bribesCost[i] != 0) {
+				releaseCost = bribes[i] / bribesCost[i];
+				startIndex = i+1;
+				break;
+			}
+		}
+		for (int i = startIndex; i < bribes.length; i++) {
 			if (bribesCost[i] == 0) {
 				continue;
 			}
@@ -87,7 +93,7 @@ public class BribeThePrisoners {
 				if (releaseNumber == 0) {
 					continue;
 				}
-				if (bribes[i+1] / bribesCost[i+1] < bribes[releaseNumber-1] / bribesCost[releaseNumber-1]) {
+				if (bribes[releaseNumber+1] / bribesCost[releaseNumber+1] < bribes[releaseNumber-1] / bribesCost[releaseNumber-1]) {
 					releaseNumber = i;
 				}
 			}
