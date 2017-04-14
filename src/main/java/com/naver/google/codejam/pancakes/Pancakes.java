@@ -24,14 +24,14 @@ public class Pancakes {
 	}
 
 	public int getFlipCount(String pancakes) {
-		return executeFilpPancakes(pancakes, pancakes.length(), 0);
+		return executeFilpPancakes(pancakes, pancakes.length()-1, 0);
 	}
 
 	private int executeFilpPancakes(String pancakes, int index, int flipCount) {
-		if (index == 1) {
+		if (index == 0) {
 			return (pancakes.charAt(pancakes.length()-1) == '+') ? flipCount : flipCount+1;
 		}
-		if ((pancakes.charAt(index-1) == pancakes.charAt(index-2))) {
+		if ((pancakes.charAt(index) == pancakes.charAt(index-1))) {
 			return executeFilpPancakes(pancakes, index-1, flipCount);
 		} else {
 			return executeFilpPancakes(pancakes, index-1, flipCount+1);
