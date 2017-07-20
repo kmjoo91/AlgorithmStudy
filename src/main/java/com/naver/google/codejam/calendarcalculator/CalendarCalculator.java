@@ -5,7 +5,7 @@
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.naver.google.codejam;
+package com.naver.google.codejam.calendarcalculator;
 
 /**
  *

@@ -14,7 +14,8 @@ import java.util.Scanner;
 import com.naver.amazon.EmployeeNumber;
 import com.naver.book.p155.BribeThePrisoners;
 import com.naver.google.NumberCountCalculator;
-import com.naver.google.codejam.CalendarCalculator;
+import com.naver.google.codejam.calendarcalculator.CalendarCalculator;
+import com.naver.google.codejam.pancakes.Pancakes;
 import com.naver.nexon.SelfNumber;
 
 /**
@@ -28,7 +29,18 @@ public class Main {
 		//executePrintSelfNumber();
 		//executeEmployeeNumber();
 		//executeCalendarCalculator();
+		//executeBribeThePrisoners();
 
+		BufferedReader in = new BufferedReader(new FileReader("PancakesLarge.txt"));
+		int caseCount = Integer.parseInt(in.readLine());
+		for (int i = 0; i < caseCount; i++) {
+			Pancakes pancakes = new Pancakes();
+			String result = String.format("Case #%d: %d", i+1, pancakes.getFlipCount(in.readLine()));
+			System.out.println(result);
+		}
+	}
+
+	private static void executeBribeThePrisoners() throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader("BribeThePrisoners.txt"));
 		int maxCase = Integer.parseInt(in.readLine());
 		for (int i = 0; i < maxCase; i++) {
