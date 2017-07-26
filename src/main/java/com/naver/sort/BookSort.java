@@ -7,6 +7,9 @@
 
 package com.naver.sort;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  *
  *
@@ -19,6 +22,28 @@ public class BookSort {
 			pivot = partitionQuickSort(value, start, end);
 			quickSort(value, start, pivot -1);
 			quickSort(value, pivot+1, end);
+		}
+	}
+
+	public void repeatQuickSort(int[] value, int start, int end) {
+		//stack으로하나 queue로하나 동작은 정상적으로되나 stack으로 구현할 경우 재귀와 똑같은 순서로 동작하도록 만들 수 있다.
+		Queue<Integer> startQueue = new LinkedList();
+		Queue<Integer> endQueue = new LinkedList();
+		startQueue.add(start);
+		endQueue.add(end);
+
+		while(startQueue.isEmpty() == false && endQueue.isEmpty() == false) {
+			start = startQueue.poll();
+			end = endQueue.poll();
+			int pivot = partitionQuickSort(value, start, end);
+			if (start < pivot-1) {
+				startQueue.add(start);
+				endQueue.add(pivot - 1);
+			}
+			if (pivot+1 < end) {
+				startQueue.add(pivot + 1);
+				endQueue.add(end);
+			}
 		}
 	}
 

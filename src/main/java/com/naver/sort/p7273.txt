@@ -132,3 +132,37 @@
 
     0 ~ 7까지 정렬
     90,80,70,60,60,50,40,30,
+
+3. 퀵 정렬의 특성 및 효율성과 안정성의 특성을 적어보세요.
+퀵 정렬은 최소 nlogn의 성능, 평균 nlogn의 성능, 최대 n^2의 성능을 가지는것이다.
+평균이 최소와 같은것을 보면 웬만한 경우에 최소시간이 걸린다는것을 알 수 있다.
+따라서 quick sort의 성능을 보통 O(nlogn)이라고 한다.
+자료의 교환도 계속일어나서 안정성이 떨어진다.
+
+4. 정렬 알고리즘의 효율성을 기준으로 O(n^2), O(nlogn), O(n)의 효율성을 지니는 알고리즘은 어떤 알고리즘이 있는지 나누어 보세요.
+O(n^2) - Selection, Bubble, Insert, Quick(최대)
+O(nlogn) - Merge, Quick(평균), Heap
+O(n) - Radix(O(n)은 아니지만 O(kn), k는 가장 큰 숫자의 자릿수)
+
+5. 현재 퀵정렬은 순환 호출 구조로 구현되어 있습니다. 이를 반복 호출 구조로 변경해서 구현해 보세요.
+    public void repeatQuickSort(int[] value, int start, int end) {
+		//stack으로하나 queue로하나 동작은 정상적으로되나 stack으로 구현할 경우 재귀와 똑같은 순서로 동작하도록 만들 수 있다.
+		Queue<Integer> startQueue = new LinkedList();
+		Queue<Integer> endQueue = new LinkedList();
+		startQueue.add(start);
+		endQueue.add(end);
+
+		while(startQueue.isEmpty() == false && endQueue.isEmpty() == false) {
+			start = startQueue.poll();
+			end = endQueue.poll();
+			int pivot = partitionQuickSort(value, start, end);
+			if (start < pivot-1) {
+				startQueue.add(start);
+				endQueue.add(pivot - 1);
+			}
+			if (pivot+1 < end) {
+				startQueue.add(pivot + 1);
+				endQueue.add(end);
+			}
+		}
+	}
