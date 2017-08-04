@@ -41,7 +41,7 @@ public class OpenAddressingBookVersionTest {
 		String searchKey = "1";
 		OpenAddressing.Bucket searchBucket = openAddressing.search(hashTable, searchKey);
 		if (bucket != null) {
-			System.out.println("Find in the HashTable, Bucket : " + searchBucket);
+			System.out.println("Find in the HashTable, Bucket : " + bucket);
 		} else {
 			System.out.println("HashTable don't has " + searchKey);
 		}

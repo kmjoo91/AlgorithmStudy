@@ -104,7 +104,7 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 		if (bucket != null) {
 			bucket.setKey(Bucket.EMPTY);
 			bucket.setHashBucketStatus(HashBucketStatus.DELETED);
-			hashTable.setCurrentCount(hashTable.getCurrentCount());
+			hashTable.setCurrentCount(hashTable.getCurrentCount() - 1);
 			return true;
 		}
 
@@ -130,7 +130,7 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 		do {
 			Bucket currentBucket = hashTable.getBuckets()[bucketIndex];
 			if (currentBucket.getHashBucketStatus().equals(HashBucketStatus.USED)) {
-				if (currentBucket.getKey() == (searchKey)) {
+				if (currentBucket.getKey().equals(searchKey)) {
 					return currentBucket;
 				} else {
 					tryCount++;
