@@ -21,10 +21,10 @@ public interface OpenAddressing {
 	}
 
 	public class Bucket {
-		public static final int EMPTY = -1;
+		public static final String EMPTY = "";
 
-		int key;
-		String value;
+		String key;
+		Object value;
 		HashBucketStatus hashBucketStatus;
 
 		public Bucket() {
@@ -33,19 +33,19 @@ public interface OpenAddressing {
 			this.hashBucketStatus = HashBucketStatus.EMPTY;
 		}
 
-		public int getKey() {
+		public String getKey() {
 			return key;
 		}
 
-		public void setKey(int value) {
+		public void setKey(String value) {
 			this.key = value;
 		}
 
-		public String getValue() {
+		public Object getValue() {
 			return value;
 		}
 
-		public void setValue(String value) {
+		public void setValue(Object value) {
 			this.value = value;
 		}
 
@@ -105,8 +105,8 @@ public interface OpenAddressing {
 
 	public HashTable createHashTable(int bucketSize);
 	public void deleteHashTable(HashTable hashTable);
-	public boolean addData(HashTable hashTable, String data);
-	public boolean removeData(HashTable hashTable, int searchKey);
-	public Bucket search(HashTable hashTable, int searchKey);
+	public boolean addData(HashTable hashTable, Bucket bucket);
+	public boolean removeData(HashTable hashTable, String searchKey);
+	public Bucket search(HashTable hashTable, String searchKey);
 	public int getCount(HashTable hashTable);
 }

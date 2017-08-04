@@ -15,26 +15,33 @@ public class OpenAddressingBookVersionTest {
 		hashTable.print();
 
 		for (int i = 0; i < 30; i++) {
+			OpenAddressing.Bucket bucket = new OpenAddressing.Bucket();
 			if (i >= 20 ) {
-				openAddressing.addData(hashTable, String.valueOf(20));
+				bucket.setKey(String.valueOf(20));
+				bucket.setValue(20);
 			} else {
-				openAddressing.addData(hashTable, String.valueOf(i));
+				bucket.setKey(String.valueOf(i));
+				bucket.setValue(i);
 			}
+			openAddressing.addData(hashTable, bucket);
 		}
 
 		System.out.println("========================데이터넣은후=======================");
 		hashTable.print();
 
 		System.out.println("========================테이블이 꽉찼을경우=======================");
-		openAddressing.addData(hashTable, String.valueOf(1));
+		OpenAddressing.Bucket bucket = new OpenAddressing.Bucket();
+		bucket.setKey(String.valueOf(1));
+		bucket.setValue(1);
+		openAddressing.addData(hashTable, bucket);
 
 
 
 		System.out.println("========================찾는데 있을경우=======================");
-		char searchKey = '1';
-		OpenAddressing.Bucket bucket = openAddressing.search(hashTable, searchKey);
+		String searchKey = "1";
+		OpenAddressing.Bucket searchBucket = openAddressing.search(hashTable, searchKey);
 		if (bucket != null) {
-			System.out.println("Find in the HashTable, Bucket : " + bucket);
+			System.out.println("Find in the HashTable, Bucket : " + searchBucket);
 		} else {
 			System.out.println("HashTable don't has " + searchKey);
 		}
@@ -51,7 +58,7 @@ public class OpenAddressingBookVersionTest {
 
 
 		System.out.println("========================지워도 있을경우=======================");
-		searchKey = '2' + '0';
+		searchKey = "20";
 		bucket = openAddressing.search(hashTable, searchKey);
 		if (bucket != null) {
 			System.out.println("Find in the HashTable, Bucket : " + bucket);

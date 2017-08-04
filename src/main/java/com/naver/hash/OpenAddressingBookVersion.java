@@ -42,27 +42,25 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 	}
 
 	@Override
-	public boolean addData(HashTable hashTable, String data) {
+	public boolean addData(HashTable hashTable, Bucket data) {
 		if (hashTable == null) {
 			throw new IllegalArgumentException("HashTable is null!!!");
 		}
 
-		int hash = convertStringToNmber(data);
-		int firstIndex = hashFunction(hash, hashTable.getBucketSize());
-		int bucketIndex = hashFunction(hash, hashTable.getBucketSize());
+		int searchKey = convertStringToNmber(data.getKey());
+		int firstIndex = hashFunction(searchKey, hashTable.getBucketSize());
+		int bucketIndex = hashFunction(searchKey, hashTable.getBucketSize());
 		int tryCount = 0;
 		do {
 			Bucket currentBucket = hashTable.getBuckets()[bucketIndex];
 			if (isEmptyBucket(currentBucket.getHashBucketStatus())) {
-				currentBucket.setHashBucketStatus(HashBucketStatus.USED);
-				int key = convertStringToNmber(data);
-				currentBucket.setKey(key);
-				currentBucket.setValue(data);
+				hashTable.getBuckets()[bucketIndex] = data;
+				data.setHashBucketStatus(HashBucketStatus.USED);
 				hashTable.setCurrentCount(hashTable.getCurrentCount() + 1);
 				return true;
 			} else {
 				tryCount++;
-				bucketIndex = hashFunction(hash + tryCount, hashTable.getBucketSize());
+				bucketIndex = hashFunction(searchKey + tryCount, hashTable.getBucketSize());
 			}
 
 			if (bucketIndex < 0 || bucketIndex >= hashTable.getBucketSize()) {
@@ -71,7 +69,7 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 		} while (firstIndex != bucketIndex);
 
 		LOGGER.error("HashTable is Full!!!!!!");
-		System.out.println("HashTable is Full!!!! data :" + data + " key : " + convertStringToNmber(data));
+		System.out.println("HashTable is Full!!!! data :" + data);
 		return false;
 	}
 
@@ -97,7 +95,7 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 	}
 
 	@Override
-	public boolean removeData(HashTable hashTable, int searchKey) {
+	public boolean removeData(HashTable hashTable, String searchKey) {
 		if (hashTable == null) {
 			throw new IllegalArgumentException("HashTable is null!!!");
 		}
@@ -115,18 +113,19 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 	}
 
 	@Override
-	public Bucket search(HashTable hashTable, int searchKey) {
+	public Bucket search(HashTable hashTable, String searchKey) {
 		if (hashTable == null) {
 			throw new IllegalArgumentException("HashTable is null!!!");
 		}
 
-		int firstIndex = hashFunction(searchKey, hashTable.getBucketSize());
+		int searchKeyToNumber = convertStringToNmber(searchKey);
+		int firstIndex = hashFunction(searchKeyToNumber, hashTable.getBucketSize());
 
 		if (firstIndex < 0 || firstIndex >= hashTable.getBucketSize()) {
 			throw new IndexOutOfBoundsException("BucketIndex is Out of BucketSize");
 		}
 
-		int bucketIndex = hashFunction(searchKey, hashTable.getBucketSize());
+		int bucketIndex = hashFunction(searchKeyToNumber, hashTable.getBucketSize());
 		int tryCount = 0;
 		do {
 			Bucket currentBucket = hashTable.getBuckets()[bucketIndex];
@@ -135,11 +134,11 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 					return currentBucket;
 				} else {
 					tryCount++;
-					bucketIndex = hashFunction(searchKey + tryCount, hashTable.getBucketSize());
+					bucketIndex = hashFunction(searchKeyToNumber + tryCount, hashTable.getBucketSize());
 				}
 			} else if (currentBucket.getHashBucketStatus().equals(HashBucketStatus.DELETED)) {
 				tryCount++;
-				bucketIndex = hashFunction(searchKey + tryCount, hashTable.getBucketSize());
+				bucketIndex = hashFunction(searchKeyToNumber + tryCount, hashTable.getBucketSize());
 			} else{
 				return null;
 			}
