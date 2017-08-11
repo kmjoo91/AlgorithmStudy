@@ -2,6 +2,9 @@ package com.naver.hash;
 
 import org.junit.Test;
 
+import com.naver.hash.openaddressing.OpenAddressing;
+import com.naver.hash.openaddressing.OpenAddressingBookVersion;
+
 /**
  * Created by AD on 2017-08-03.
  */

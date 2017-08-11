@@ -5,7 +5,7 @@
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package com.naver.hash;
+package com.naver.hash.openaddressing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,9 +76,6 @@ public class OpenAddressingBookVersion implements OpenAddressing{
 	private int convertStringToNmber(String data) {
 		int sum = 0;
 		for (int i = 0; i < data.length(); i++) {
-			if ("10".equals(data)) {
-				System.out.println("");
-			}
 			int ascii = data.charAt(i);
 			sum += ascii;
 		}
