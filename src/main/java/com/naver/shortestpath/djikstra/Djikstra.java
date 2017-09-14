@@ -32,7 +32,7 @@ public class Djikstra {
 		}
 	}
 
-	public Queue<Integer> calculateShortestPath(int start, int end) {
+	public int calculateShortestPath(int start, int end) {
 		Queue<Integer> route = new LinkedList<>();
 		route.offer(start);
 
@@ -40,7 +40,7 @@ public class Djikstra {
 			int nextNode = getShortestNode(start, distance, route);
 			route.offer(nextNode);
 			if (nextNode == end) {
-				return route;
+				return distance[start][end];
 			}
 
 			for (int node = 0; node < distance[start].length; node++) {

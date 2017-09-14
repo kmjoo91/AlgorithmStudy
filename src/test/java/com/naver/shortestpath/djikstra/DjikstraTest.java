@@ -18,15 +18,25 @@ public class DjikstraTest {
 			{1, 100, 1, 0, 100},
 			{1001, 1, 100, 100, 0}
 	};
-	Djikstra djikstra = new Djikstra(map);
+
+	int[][] map2 = {
+		{0, 3, 100, 4, 4, 100, 100, 100},
+		{3, 0, 2, 100, 100, 100, 100, 100},
+		{0, 2, 0, 1, 100, 100, 100, 3},
+		{4, 100, 1, 0, 2, 100, 6, 100},
+		{4, 100, 100, 2, 0, 4 , 100, 100},
+		{100, 100, 100, 100, 4, 0, 3, 2},
+		{100, 100, 100, 6, 100, 3, 0, 100},
+		{100, 100, 3, 100, 100, 2, 100, 0}
+	};
+	Djikstra djikstra = new Djikstra(map2);
 
 	@Test
 	public void 테스트() {
-		Queue<Integer> route = djikstra.calculateShortestPath(0, 4);
+		int distance = djikstra.calculateShortestPath(0, 7);
 
-		while (route.isEmpty() == false) {
-			int node = route.poll();
-			System.out.println(node);
-		}
+		System.out.println(distance);
 	}
+
+
 }
