@@ -47,6 +47,7 @@ public class Knapsack {
 		int listSize = itemList.size();
 		for (int i = listSize - 1; i >= 0; i--) {
 			if (itemList.get(i).getWeight() > weight) {
+				System.out.println("Item : " + itemList.get(i).getName() + " num : " + 0);
 				itemList.remove(i);
 			}
 		}
