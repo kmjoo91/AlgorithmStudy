@@ -66,4 +66,14 @@ public class Item {
 	public double getUnitValue() {
 		return price / weight;
 	}
+
+	@Override
+	public String toString() {
+		return "Item {" +
+				"name='" + name + '\'' +
+				", price=" + price +
+				", weight=" + weight +
+				", number=" + number +
+				'}';
+	}
 }
