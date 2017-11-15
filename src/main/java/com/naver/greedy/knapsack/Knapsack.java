@@ -32,9 +32,9 @@ public class Knapsack {
 
 		double remainnigWeight = weight;
 		for (Item item : itemList) {
-			if (remainnigWeight > item.getWeight()) {
+			if (remainnigWeight > 0) {
 				double number = remainnigWeight / item.getWeight();
-				number = number > item.getNumber() ? item.getNumber() : number;
+				number = number > (double)item.getNumber() ? item.getNumber() : number;
 				System.out.println("Item : " + item.getName() + " num : " + number);
 				remainnigWeight -= item.getWeight() * number;
 			} else {
