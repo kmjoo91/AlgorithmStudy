@@ -25,9 +25,6 @@ public class Knapsack {
 	}
 
 	public void printFractionalKnapsackProblem() {
-		//필요없는 아이템 제거!!!
-		removeUnnecessaryItems(itemList, weight);
-
 		Collections.sort(itemList, new UnitValueComparator());
 
 		double remainnigWeight = weight;
@@ -43,6 +40,11 @@ public class Knapsack {
 		}
 	}
 
+	/**
+	 * 배낭문제에서 쓰일 함수... 부분배낭문제에선 안쓰임!
+	 * @param itemList
+	 * @param weight
+	 */
 	private void removeUnnecessaryItems(List<Item> itemList, double weight) {
 		int listSize = itemList.size();
 		for (int i = listSize - 1; i >= 0; i--) {
