@@ -11,6 +11,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.naver.amazon.EmployeeNumber;
 import com.naver.book.p155.BribeThePrisoners;
 import com.naver.google.NumberCountCalculator;
@@ -24,6 +27,7 @@ import com.naver.nexon.SelfNumber;
  * @author kim.minjoo
  */
 public class Main {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	public static void main(String[] args) throws Exception {
 		//executeNumberCountCalculator();
 		//executePrintSelfNumber();
@@ -31,13 +35,16 @@ public class Main {
 		//executeCalendarCalculator();
 		//executeBribeThePrisoners();
 
-		BufferedReader in = new BufferedReader(new FileReader("PancakesLarge.txt"));
-		int caseCount = Integer.parseInt(in.readLine());
-		for (int i = 0; i < caseCount; i++) {
-			Pancakes pancakes = new Pancakes();
-			String result = String.format("Case #%d: %d", i+1, pancakes.getFlipCount(in.readLine()));
-			System.out.println(result);
-		}
+//		BufferedReader in = new BufferedReader(new FileReader("PancakesLarge.txt"));
+//		int caseCount = Integer.parseInt(in.readLine());
+//		for (int i = 0; i < caseCount; i++) {
+//			Pancakes pancakes = new Pancakes();
+//			String result = String.format("Case #%d: %d", i+1, pancakes.getFlipCount(in.readLine()));
+//			System.out.println(result);
+//		}
+
+		LOGGER.debug("나와라");
+		LOGGER.error("??");
 	}
 
 	private static void executeBribeThePrisoners() throws IOException {
