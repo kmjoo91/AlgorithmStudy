@@ -15,7 +15,7 @@ package com.naver.divideandconquer.factorial;
 public class Factorial {
 	public int factorial(int num) {
 		if (num < 1) {
-			throw new IllegalArgumentException("The parameters of factorial method are greater than one, parameter : " + num);
+			throw new IllegalArgumentException("The parameter of factorial method is greater than one, parameter : " + num);
 		}
 
 		if (num == 1) {
