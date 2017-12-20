@@ -41,7 +41,7 @@ public class ClosestPairTest {
 
 	@Test
 	public void 랜덤테스트() {
-		int pointSize = 100000;
+		int pointSize = 10000000;
 		int boundSize = pointSize * 100;
 		Point[] points = new Point[pointSize];
 		Random random = new Random();
@@ -62,7 +62,7 @@ public class ClosestPairTest {
 		long end = System.currentTimeMillis(); //프로그램이 끝나는 시점 계산
 		System.out.println( "실행 시간 : " + ( end - start ) + "밀리초"); //실행 시간 계산 및 출력
 
-		//System.out.println(minPair);
+		System.out.println(minPair);
 
 		start = System.currentTimeMillis(); //시작하는 시점 계산
 		Pair min = closestPair.calculateAllCaseClosestPair(points);
@@ -93,15 +93,6 @@ public class ClosestPairTest {
 		double yDistance = Math.pow((p1.getY() - p2.getY()), 2);
 
 		return Math.sqrt(xDistance + yDistance);
-	}
-
-	@Test
-	public void 테스트() {
-		if (null instanceof String) {
-			System.out.println("ㅋㅋ");
-		} else {
-			System.out.println("zzzzz");
-		}
 	}
 
 }
