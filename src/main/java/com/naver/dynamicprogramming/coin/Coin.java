@@ -34,7 +34,12 @@ public class Coin {
 			}
 
 			int currentMoney = money - coin;
-			int current = memo[currentMoney] == -1 ? calculate(currentMoney, coins) + 1 : memo[currentMoney];
+			int current = memo[currentMoney];
+
+			if (current == -1) {
+				current = calculate(currentMoney, coins);
+				memo[currentMoney] = current;
+			}
 
 			if (current < min) {
 				min = current;
