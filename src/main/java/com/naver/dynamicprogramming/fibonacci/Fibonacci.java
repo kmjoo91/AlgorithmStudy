@@ -30,10 +30,18 @@ public class Fibonacci {
 			return n;
 		}
 
-		int prev = memo[n - 1] == -1 ? calculate(n - 1, memo) : memo[n - 1];
-		int beforePrev = memo[n - 2] == -1 ? calculate(n - 2, memo) : memo[n - 2];
+		int prev = memo[n - 1];
+		if (prev == -1) {
+			prev = calculate(n - 1, memo);
+			memo[n - 1] = prev;
+		}
+
+		int beforePrev = memo[n - 2];
+		if (beforePrev == -1) {
+			beforePrev = calculate(n - 1, memo);
+			memo[n - 2] = beforePrev;
+		}
 
 		return prev + beforePrev;
 	}
-
 }
