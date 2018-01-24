@@ -25,25 +25,20 @@ public class ZeroOneKnapsack {
 			}
 		}
 
-		int max = 0;
 		for (int i = 1; i < itemCount + 1; i++) {
 			for (int j = 0; j < capacity + 1; j++) {
 				int unSelected = memo[i - 1][j];
-				int selected = -1;
+				int selected = 0;
+
 				if (j >= itemList.get(i - 1).getCapacity()) {
 					selected = memo[i - 1][j - itemList.get(i - 1).getCapacity()] + itemList.get(i - 1).getValue();
 				}
 
-				int current = selected > unSelected ? selected : unSelected;
-				memo[i][j] = current;
-
-				if (current > max) {
-					max = current;
-				}
+				memo[i][j] = selected > unSelected ? selected : unSelected;
 			}
 		}
 
-		return max;
+		return memo[itemList.size()][capacity];
 	}
 
 }
