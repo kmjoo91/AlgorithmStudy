@@ -37,7 +37,7 @@ public class Coin {
 			int current = memo[currentMoney];
 
 			if (current == -1) {
-				current = calculate(currentMoney, coins);
+				current = calculate(currentMoney, coins) + 1;
 				memo[currentMoney] = current;
 			}
 
