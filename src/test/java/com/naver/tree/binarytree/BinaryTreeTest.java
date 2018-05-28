@@ -48,6 +48,18 @@ public class BinaryTreeTest {
 	}
 
 	@Test
+	public void using1StackPostOrderTest() {
+		BinaryTree binaryTree = new BinaryTree();
+
+		for (int i = 1; i < 16; i++) {
+			binaryTree.add(i);
+		}
+
+		binaryTree.postOrder();
+		binaryTree.using1StackPostOrder();
+	}
+
+	@Test
 	public void levelOrderTest() {
 		BinaryTree binaryTree = new BinaryTree();
 

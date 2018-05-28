@@ -53,6 +53,14 @@ public class Sort {
 
 		startTime = System.nanoTime();
 		int[] arr5 = {70, 50, 80, 60, 30, 90, 60, 40};
+		test.repeatQuickSort(arr5, 0, arr4.length - 1);
+		endTime = System.nanoTime();
+		System.out.println("Book Repeat Quick Sort 실행시간 : " + (endTime - startTime));
+		System.out.println("출력");
+		sort.print(arr4, 0);
+
+		startTime = System.nanoTime();
+		int[] arr6 = {70, 50, 80, 60, 30, 90, 60, 40};
 		sort.radixSort(arr5);
 		endTime = System.nanoTime();
 		System.out.println("Radix Sort 실행시간 : " + (endTime - startTime));
@@ -60,7 +68,7 @@ public class Sort {
 
 		startTime = System.nanoTime();
 		System.out.println("====quick sort====");
-		int[] arr6 = {70, 50, 80, 60, 30, 90, 60, 40};
+		int[] arr7 = {70, 50, 80, 60, 30, 90, 60, 40};
 		test.repeatQuickSort(arr6, 0, arr6.length-1);
 		endTime = System.nanoTime();
 		System.out.println("Repeat Quick Sort 실행시간 : " + (endTime - startTime));

@@ -1,9 +1,11 @@
 package com.naver.dynamicprogramming.baekjoon.oneninethreetwo;
 
+import java.util.Scanner;
+
 /**
  * https://www.acmicpc.net/problem/1932
  */
-public class Oneninethreetwo {
+public class NumberTriangle {
 	public static int calculate(int n, String[] strNumbers) {
 		int[][] numbers = new int[n][n];
 
@@ -42,24 +44,12 @@ public class Oneninethreetwo {
 			}
 		}
 
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				System.out.print(memo[i][j] + " ");
-			}
-			System.out.println();
-		}
-
 		return max;
 	}
 
 	public static int calculate2(int n, String[] strNumbers) {
-		int[]numbers = new int[n];
+		int[] numbers = new int[n];
 		numbers[0] = Integer.parseInt(strNumbers[0]);
-
-//		for (int i = 0; i < n; i++) {
-//			System.out.print(numbers[i] + " ");
-//		}
-//		System.out.println();
 
 		for (int i = 1; i < n; i++) {
 			int prev = numbers[0];
@@ -70,11 +60,6 @@ public class Oneninethreetwo {
 				numbers[j] = Math.max(prev, current) + Integer.parseInt(row[j]);
 				prev = current;
 			}
-//
-//			for (int j = 0; j < n; j++) {
-//				System.out.print(numbers[j] + " ");
-//			}
-//			System.out.println();
 		}
 
 		int max = numbers[0];
@@ -85,5 +70,21 @@ public class Oneninethreetwo {
 		}
 
 		return max;
+	}
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+
+		int n = scanner.nextInt();
+		scanner.nextLine();
+
+		String[] triangle = new String[n];
+
+		for (int i = 0; i < n; i++) {
+			triangle[i] = scanner.nextLine();
+		}
+
+		int result = calculate2(n, triangle);
+		System.out.println(result);
 	}
 }

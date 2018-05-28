@@ -98,4 +98,23 @@ public class BonobonoTest {
 		//then
 		//assertEquals(expected, actual);
 	}
+
+	@Test
+	public void example4() {
+		long start = System.currentTimeMillis();
+		//give
+		int[] torchs = new int[200000];
+
+		for (int i = 0; i < 100; i += 4) {
+
+		}
+
+
+		long end = System.currentTimeMillis();
+
+		System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+
+		//then
+		//assertEquals(expected, actual);
+	}
 }
