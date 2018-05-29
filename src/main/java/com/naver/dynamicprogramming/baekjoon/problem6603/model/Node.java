@@ -1,4 +1,4 @@
-package com.naver.dynamicprogramming.baekjoon.sixsixzerothree.model;
+package com.naver.dynamicprogramming.baekjoon.problem6603.model;
 
 import java.util.ArrayList;
 import java.util.List;
