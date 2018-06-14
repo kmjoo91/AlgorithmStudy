@@ -1,4 +1,4 @@
-package com.naver.dynamicprogramming.baekjoon.problem1932;
+package com.naver.baekjoon.problem1932;
 
 import static org.junit.jupiter.api.Assertions.*;
 

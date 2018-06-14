@@ -1,4 +1,4 @@
-package com.naver.dynamicprogramming.baekjoon.problem9935;
+package com.naver.baekjoon.problem9935;
 
 import java.util.Scanner;
 

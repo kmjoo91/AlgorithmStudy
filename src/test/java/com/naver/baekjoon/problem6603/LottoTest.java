@@ -1,4 +1,4 @@
-package com.naver.dynamicprogramming.baekjoon.problem6603;
+package com.naver.baekjoon.problem6603;
 
 import org.junit.Test;
 

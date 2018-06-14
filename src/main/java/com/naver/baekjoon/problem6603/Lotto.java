@@ -1,11 +1,11 @@
-package com.naver.dynamicprogramming.baekjoon.problem6603;
+package com.naver.baekjoon.problem6603;
 
 import java.util.Arrays;
 import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.naver.dynamicprogramming.baekjoon.problem6603.model.Node;
+import com.naver.baekjoon.problem6603.model.Node;
 
 public class Lotto {
 	public static void calculate(String condition) {
