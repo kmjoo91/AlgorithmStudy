@@ -17,6 +17,10 @@ public class PrimeNumberFinder {
 	}
 
 	private static boolean isPrimeNumber(int num) {
+		if (num < 2) {
+			return false;
+		}
+
 		for (int i = 2; i <= Math.sqrt(num); i++) {
 			int remainder = num % i;
 			if (remainder == 0) {
