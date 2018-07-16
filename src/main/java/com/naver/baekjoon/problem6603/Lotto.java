@@ -7,6 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.naver.baekjoon.problem6603.model.Node;
 
+/**
+ * https://www.acmicpc.net/problem/6603
+ */
 public class Lotto {
 	public static void calculate(String condition) {
 		String[] arr = StringUtils.split(condition, " ");

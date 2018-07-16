@@ -2,6 +2,9 @@ package com.naver.baekjoon.problem1978;
 
 import java.util.Scanner;
 
+/**
+ * https://www.acmicpc.net/problem/1978
+ */
 public class PrimeNumberDiscriminator {
 	public static int Discriminate(int[] numbers) {
 		int result = 0;

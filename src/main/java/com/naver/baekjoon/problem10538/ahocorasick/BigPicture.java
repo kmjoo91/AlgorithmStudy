@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 
+/**
+ * https://www.acmicpc.net/problem/10538
+ */
 public class BigPicture {
 	public static int calculate(String[] picture, String[] bigPicture) {
 		AhoCorasick ahoCorasick = AhoCorasick.builder()

@@ -2,6 +2,9 @@ package com.naver.baekjoon.problem1747;
 
 import java.util.Scanner;
 
+/**
+ * https://www.acmicpc.net/problem/1747
+ */
 public class PrimeNumberPalindrome {
 	public static int calculate(int n) {
 		while (true) {

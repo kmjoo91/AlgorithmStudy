@@ -2,6 +2,9 @@ package com.naver.baekjoon.problem1929;
 
 import java.util.Scanner;
 
+/**
+ * https://www.acmicpc.net/problem/1929
+ */
 public class PrimeNumberFinder {
 	public static void Find(int m, int n) {
 		if (m <= 2) {
