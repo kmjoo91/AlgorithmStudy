@@ -53,10 +53,6 @@ public class LowestCommonAncestor {
 
 	private static void calculateParent(NclNode parent) {
 		for (NclNode child : parent.getNeighbor()) {
-			if (child.getNumber() == parent.getNumber()) {
-				continue;
-			}
-
 			child.setLevel(parent.getLevel() + 1);
 			child.setParent(parent);
 			child.getNeighbor().remove(parent);
