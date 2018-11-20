@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * https://www.acmicpc.net/problem/1708
  */
-public class CunvexHull {
+public class ConvexHull {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         //1. 입력받고.
@@ -41,15 +41,15 @@ public class CunvexHull {
         for (int i = 0; i < pointList.size(); i++) {
             Point currentPoint = pointList.get(i);
             double distance = Math.sqrt(
-                    Math.pow(Math.abs((double)currentPoint.getX() - minPoint.getX()),2)
-                            + Math.pow(Math.abs((double)currentPoint.getY() - minPoint.getY()), 2));
-            double xgap = (double)currentPoint.getX() - minPoint.getX();
+                    Math.pow(Math.abs((double)currentPoint.getX() - minPoint.getX()),2) + Math.pow(Math.abs((double)currentPoint.getY() - minPoint.getY()), 2)
+            );
 
-            currentPoint.setCosValue(xgap / distance);
+            currentPoint.setDistance(distance);
+            currentPoint.setAngle(getAngle(minPoint, currentPoint));
         }
 
         //4. 각도별로 정렬하고
-        Collections.sort(pointList, new CosComparator());
+        pointList.sort(new CosComparator());
 
         //5. 이제 점 찾아다니면서 확인하자.
         Stack<Point> cunvexHullStack = new Stack<>();
@@ -97,22 +97,27 @@ public class CunvexHull {
      *
      * @return 1 반시계 0 일직선 -1 시계
      */
-    private static int ccw(int x1, int y1, int x2, int y2, int x3, int y3) {
-        int temp = x1*y2+x2*y3+x3*y1;
-        temp = temp - y1*x2-y2*x3-y3*x1;
-        if (temp > 0) {
-            return 1;
-        } else if (temp < 0) {
-            return -1;
-        } else {
-            return 0;
-        }
+    private static int ccw(long x1, long y1, long x2, long y2, long x3, long y3) {
+        long temp = x1*y2 + x2*y3 + x3*y1;
+        long temp2 = y1*x2 + y2*x3 + y3*x1;
+        return Long.compare(temp - temp2, 0);
+    }
+
+    public static double getAngle(Point one, Point two) {
+        long temp1 = two.getY() - one.getY();
+        long temp2 = two.getX() - one.getX();
+
+        double rad = Math.atan2(temp1, temp2);
+        return (rad * 180) / Math.PI;
     }
 }
+
 class Point {
     private final int x;
     private final int y;
     private double cosValue;
+    private double distance;
+    private double angle;
 
     public Point(int x, int y) {
         this.x = x;
@@ -134,6 +139,22 @@ class Point {
     public void setCosValue(double cosValue) {
         this.cosValue = cosValue;
     }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
 }
 
 class CosComparator implements Comparator<Point> {
@@ -144,10 +165,18 @@ class CosComparator implements Comparator<Point> {
             return cosCompare;
         }
 
-        if (p1.getX() == p2.getX()) {
-            return Integer.compare(p1.getY(), p2.getY()) * -1;
+        return Double.compare(p1.getDistance(), p2.getDistance());
+    }
+}
+
+class AngleComparator implements Comparator<Point> {
+    @Override
+    public int compare(Point p1, Point p2) {
+        int angleCompare = Double.compare(p1.getAngle(), p2.getAngle()) * -1;
+        if (angleCompare != 0) {
+            return angleCompare;
         }
 
-        return Integer.compare(p1.getX(), p2.getX());
+        return Double.compare(p1.getDistance(), p2.getDistance());
     }
 }
