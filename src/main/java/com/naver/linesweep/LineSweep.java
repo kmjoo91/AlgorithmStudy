@@ -11,10 +11,17 @@ public class LineSweep {
 
 		double minDistance = getDistance(points[0], points[1]);
 
-		Point[] possiblePoints = {points[0], points[1]};
+		//원래대로라면
+		List<Point> possiblePoints = new ArrayList<>();
+		possiblePoints.add(points[0]);
+		possiblePoints.add(points[1]);
 
 		int possibleIndex = 0;
 		for (int i = 2; i < points.length; i++) {
+			if (minDistance == 0) {
+				return 0;
+			}
+
 			Point currentPoint = points[i];
 
 			for (int j = possibleIndex; j < i; j++) {
@@ -24,16 +31,19 @@ public class LineSweep {
 				if (xDistance < minDistance) {
 					possibleIndex = j;
 					break;
+				} else {
+					possiblePoints.remove(point);
 				}
 			}
 
 			double lowerY = currentPoint.getY() - minDistance;
 			double upperY = currentPoint.getY() + minDistance;
 
-			possiblePoints = Arrays.copyOfRange(points, possibleIndex, i);
+			List<Point> pointList = possiblePoints.stream()
+					.filter(point -> point.getY() >= lowerY && point.getY() <= upperY)
+					.collect(Collectors.toList());
 
-
-			for (Point point : possiblePoints) {
+			for (Point point : pointList) {
 				if (point.getY() < lowerY || point.getY() > upperY) {
 					continue;
 				}
