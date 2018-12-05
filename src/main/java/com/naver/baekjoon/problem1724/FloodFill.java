@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
+/**
+ * https://www.acmicpc.net/problem/1724
+ */
 public class FloodFill {
     private static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {

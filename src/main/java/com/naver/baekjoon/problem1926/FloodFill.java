@@ -1,10 +1,13 @@
 package com.naver.baekjoon.problem1926;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.Scanner;
 import java.util.Stack;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+/**
+ * https://www.acmicpc.net/problem/1926
+ */
 public class FloodFill {
     private static final int WALL = 0;
     private static final int UNVISITED = 1;
