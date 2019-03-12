@@ -6,20 +6,24 @@ package com.naver;
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Scanner;
-
+import com.google.gson.Gson;
+import com.naver.kakao.Command;
+import com.naver.kakao.ElevatorStatus;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.naver.amazon.EmployeeNumber;
-import com.naver.book.p155.BribeThePrisoners;
-import com.naver.google.NumberCountCalculator;
-import com.naver.google.codejam.calendarcalculator.CalendarCalculator;
-import com.naver.google.codejam.pancakes.Pancakes;
-import com.naver.nexon.SelfNumber;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -27,81 +31,80 @@ import com.naver.nexon.SelfNumber;
  * @author kim.minjoo
  */
 public class Main {
+	public static final Gson GSON = new Gson();
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+
+	private static CloseableHttpClient httpClient = HttpClients.createDefault();;
 	public static void main(String[] args) throws Exception {
-		//executeNumberCountCalculator();
-		//executePrintSelfNumber();
-		//executeEmployeeNumber();
-		//executeCalendarCalculator();
-		//executeBribeThePrisoners();
+		ElevatorStatus elevatorStatus = onStart();
+		System.out.println(elevatorStatus);
 
-//		BufferedReader in = new BufferedReader(new FileReader("PancakesLarge.txt"));
-//		int caseCount = Integer.parseInt(in.readLine());
-//		for (int i = 0; i < caseCount; i++) {
-//			Pancakes pancakes = new Pancakes();
-//			String result = String.format("Case #%d: %d", i+1, pancakes.getFlipCount(in.readLine()));
-//			System.out.println(result);
-//		}
+		while (true) {
+			elevatorStatus = onCall(elevatorStatus.getToken());
+			System.out.println(elevatorStatus);
 
-		LOGGER.debug("나와라");
-		LOGGER.error("??");
-	}
-
-	private static void executeBribeThePrisoners() throws IOException {
-		BufferedReader in = new BufferedReader(new FileReader("BribeThePrisoners.txt"));
-		int maxCase = Integer.parseInt(in.readLine());
-		for (int i = 0; i < maxCase; i++) {
-			String line = in.readLine();
-			String[] inputStr = line.split(" ");
-			int prisonRoomNumber = Integer.parseInt(inputStr[0]);
-			int releaseNumber = Integer.parseInt(inputStr[1]);
-
-			line = in.readLine();
-			String[] releasePrisonersString = line.split(" ");
-			int[] releasePrisoners = new int[releasePrisonersString.length];
-			for (int j = 0; j < releasePrisoners.length; j++) {
-				releasePrisoners[j] = Integer.parseInt(releasePrisonersString[j]);
+			if (elevatorStatus.isEnd()) {
+				break;
 			}
 
-			BribeThePrisoners bribeThePrisoners = new BribeThePrisoners(prisonRoomNumber, releaseNumber, releasePrisoners);
-			String result = String.format("Case #%d: %d", i+1, bribeThePrisoners.getTotalBribe());
-			System.out.println(result);
+			//여기에 진짜 로직 들어가야함.
+			List<Command> commands = calculateCommands(elevatorStatus);
+
+			onAction(elevatorStatus, commands);
 		}
 	}
 
-	private static void executeCalendarCalculator() throws IOException {
-		BufferedReader in = new BufferedReader(new FileReader("calendarExample.txt"));
-		int maxCase = Integer.parseInt(in.readLine());
-		for (int i=1; i <= maxCase; i++) {
-			String line = in.readLine();
-			String[] inputStr = line.split(" ");
-			CalendarCalculator calendarCalculator = new CalendarCalculator(Long.parseLong(inputStr[0]), Integer.parseInt(inputStr[1]), Integer.parseInt(inputStr[2]));
-			System.out.print("Case #" + i +": ");
-			System.out.println(calendarCalculator.getCalendarLine());
+	//TODO 생각좀 잘해보장.
+	private static List<Command> calculateCommands(ElevatorStatus elevatorStatus) throws InterruptedException {
+		Thread.sleep(1000);
+		return null;
+	}
+
+	private static void onAction(ElevatorStatus elevatorStatus, List<Command> commands) throws IOException {
+		HttpPost request = new HttpPost("http://localhost:8000/action");
+		request.addHeader("X-Auth-Token", elevatorStatus.getToken());
+		request.addHeader("Content-Type", "application/json");
+
+		Map<String, List<Command>> params = new HashMap<>();
+		params.put("commands", commands);
+
+		String string = GSON.toJson(params);
+		System.out.println(string);
+		request.setEntity(new StringEntity(string));
+
+		HttpResponse httpResponse = httpClient.execute(request);
+
+		System.out.println(parseResponse(httpResponse, ElevatorStatus.class).toString());
+	}
+
+	private static ElevatorStatus onCall(String token) throws IOException {
+		HttpGet request = new HttpGet("http://localhost:8000/oncalls");
+
+		request.addHeader("X-Auth-Token", token);
+
+		HttpResponse httpResponse = httpClient.execute(request);
+		return parseResponse(httpResponse, ElevatorStatus.class);
+	}
+
+	private static ElevatorStatus onStart() throws IOException {
+		HttpPost request = new HttpPost("http://localhost:8000/start/kmj/1/1");
+		HttpResponse httpResponse = httpClient.execute(request);
+
+		ElevatorStatus elevatorStatus = parseResponse(httpResponse, ElevatorStatus.class);
+
+		return elevatorStatus;
+	}
+
+	private static<T> T parseResponse(HttpResponse httpResponse, Class type) throws IOException {
+		BufferedReader rd = new BufferedReader(new InputStreamReader(
+				httpResponse.getEntity().getContent()));
+
+		String response = "";
+		String str = "";
+		while ((str = rd.readLine()) != null) {
+			response += str;
 		}
-		in.close();
-	}
 
-	private static void executeEmployeeNumber() {
-		EmployeeNumber employeeNumber = new EmployeeNumber();
-		System.out.println(employeeNumber.getEmployeeNumber("EmployeeLog.txt", "10:00:00"));
-	}
-
-	private static void executeNumberCountCalculator() {
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Please enter the number you want to find (0~9)");
-		int inputNumber = scan.nextInt();
-		System.out.println("Please enter a range of numbers to find");
-		int findRange = scan.nextInt();
-		NumberCountCalculator numberCountCalculator = new NumberCountCalculator();
-
-		int numberCount = numberCountCalculator.calculateNumberCount(inputNumber, findRange);
-
-		System.out.println("Number of appearances : " + numberCount);
-	}
-
-	private static void executePrintSelfNumber() {
-		SelfNumber selfNumber = new SelfNumber();
-		selfNumber.printSelfNumber(500);
+		return (T) GSON.fromJson(response, type);
 	}
 }
