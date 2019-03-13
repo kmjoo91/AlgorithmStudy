@@ -1,11 +1,17 @@
-package com.naver.kakao;
+package com.naver.kakao.Elevator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Command {
     private int elevator_id;
     private String command;
     private List<Integer> call_ids;
+
+    public Command(Elevator elevator) {
+        this.elevator_id = elevator.getId();
+        this.call_ids = new ArrayList<>();
+    }
 
     public int getElevator_id() {
         return elevator_id;

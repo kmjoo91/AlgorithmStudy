@@ -1,9 +1,9 @@
-package com.naver.kakao;
+package com.naver.kakao.Elevator;
+
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.List;
 
 public class Elevator {
     private int id;
