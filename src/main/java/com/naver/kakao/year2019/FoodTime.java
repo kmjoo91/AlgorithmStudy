@@ -33,14 +33,21 @@ public class FoodTime {
 			}
 		}
 
-		for (int i = 0; i < food_times.length; i++) {
-			if (food_times[i] > standard ) {
-				if (k == 0) {
-					return i + 1;
-				}
-
-				k--;
+		while (k >= 0) {
+			if (sortedFoodTime[sortedFoodTime.length - 1] <= standard) {
+				return -1;
 			}
+
+			for (int i = 0; i < food_times.length; i++) {
+				if (food_times[i] > standard) {
+					if (k == 0) {
+						return i + 1;
+					}
+
+					k--;
+				}
+			}
+			standard++;
 		}
 
 		return -1;
