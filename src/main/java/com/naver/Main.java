@@ -7,19 +7,28 @@ package com.naver;
  */
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.naver.amazon.EmployeeNumber;
-import com.naver.book.p155.BribeThePrisoners;
-import com.naver.google.NumberCountCalculator;
-import com.naver.google.codejam.calendarcalculator.CalendarCalculator;
-import com.naver.google.codejam.pancakes.Pancakes;
-import com.naver.nexon.SelfNumber;
+import com.google.gson.Gson;
+
+import com.naver.kakao.Elevator.Command;
+import com.naver.kakao.Elevator.Elevator;
+import com.naver.kakao.Elevator.ElevatorStatus;
+import com.naver.kakao.Elevator.Passenger;
 
 /**
  *
@@ -27,81 +36,390 @@ import com.naver.nexon.SelfNumber;
  * @author kim.minjoo
  */
 public class Main {
+	public static final Gson GSON = new Gson();
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+	public static final int ELEVATOR_MAX_PEOPLE = 8;
+	public static final int ELEVATOR_NUMBER = 4;
+	public static final String URL = "http://localhost:8000";
+	public static final int PROBLEM_NUMBER = 2;
+
+	private static CloseableHttpClient httpClient = HttpClients.createDefault();;
+
 	public static void main(String[] args) throws Exception {
-		//executeNumberCountCalculator();
-		//executePrintSelfNumber();
-		//executeEmployeeNumber();
-		//executeCalendarCalculator();
-		//executeBribeThePrisoners();
+		ElevatorStatus elevatorStatus = onStart();
+		System.out.println(elevatorStatus);
 
-//		BufferedReader in = new BufferedReader(new FileReader("PancakesLarge.txt"));
-//		int caseCount = Integer.parseInt(in.readLine());
-//		for (int i = 0; i < caseCount; i++) {
-//			Pancakes pancakes = new Pancakes();
-//			String result = String.format("Case #%d: %d", i+1, pancakes.getFlipCount(in.readLine()));
-//			System.out.println(result);
-//		}
+		while (true) {
+			elevatorStatus = onCall(elevatorStatus.getToken());
+			System.out.println(elevatorStatus);
 
-		LOGGER.debug("나와라");
-		LOGGER.error("??");
-	}
-
-	private static void executeBribeThePrisoners() throws IOException {
-		BufferedReader in = new BufferedReader(new FileReader("BribeThePrisoners.txt"));
-		int maxCase = Integer.parseInt(in.readLine());
-		for (int i = 0; i < maxCase; i++) {
-			String line = in.readLine();
-			String[] inputStr = line.split(" ");
-			int prisonRoomNumber = Integer.parseInt(inputStr[0]);
-			int releaseNumber = Integer.parseInt(inputStr[1]);
-
-			line = in.readLine();
-			String[] releasePrisonersString = line.split(" ");
-			int[] releasePrisoners = new int[releasePrisonersString.length];
-			for (int j = 0; j < releasePrisoners.length; j++) {
-				releasePrisoners[j] = Integer.parseInt(releasePrisonersString[j]);
+			if (elevatorStatus.isEnd()) {
+				break;
 			}
 
-			BribeThePrisoners bribeThePrisoners = new BribeThePrisoners(prisonRoomNumber, releaseNumber, releasePrisoners);
-			String result = String.format("Case #%d: %d", i+1, bribeThePrisoners.getTotalBribe());
-			System.out.println(result);
+			//승객할당
+			List<List<Passenger>> assignCalls = assignCalls(elevatorStatus);
+			//엘리베이터 이동명령 계산
+			List<Command> commands = calculateCommands(elevatorStatus, assignCalls);
+
+			onAction(elevatorStatus, commands);
+
 		}
 	}
 
-	private static void executeCalendarCalculator() throws IOException {
-		BufferedReader in = new BufferedReader(new FileReader("calendarExample.txt"));
-		int maxCase = Integer.parseInt(in.readLine());
-		for (int i=1; i <= maxCase; i++) {
-			String line = in.readLine();
-			String[] inputStr = line.split(" ");
-			CalendarCalculator calendarCalculator = new CalendarCalculator(Long.parseLong(inputStr[0]), Integer.parseInt(inputStr[1]), Integer.parseInt(inputStr[2]));
-			System.out.print("Case #" + i +": ");
-			System.out.println(calendarCalculator.getCalendarLine());
+	private static List<List<Passenger>> assignCalls(ElevatorStatus elevatorStatus) {
+		List<List<Passenger>> assignCalls = new ArrayList<>();
+		for (int i = 0; i < ELEVATOR_NUMBER; i++) {
+			assignCalls.add(new ArrayList<>());
 		}
-		in.close();
+
+		List<Elevator> elevators = elevatorStatus.getElevators();
+		List<Passenger> calls = elevatorStatus.getCalls();
+
+		for (Passenger call : calls) {
+			//가중치 계산.
+			int[] weights = new int[elevators.size()];
+			for (int i = 0; i < weights.length; i++) {
+				weights[i] = Integer.MAX_VALUE;
+			}
+
+			for (int i = 0; i < elevators.size(); i++) {
+				Elevator elevator = elevators.get(i);
+				// 엘리베이터에 승객이 타있는지, 혹은 타있지 않은지.
+				if (elevator.getPassengers().size() > 0) {
+					for (Passenger passenger : elevator.getPassengers()) {
+						//내릴애가 있으면 어차피 걔 내릴때 태우면되니까 추가비용이 0이든다.
+						if (passenger.getEnd() == call.getStart()) {
+							weights[i] = 0;
+							break;
+						}
+					}
+
+					//어차피 순서대로 처리하니까 마지막애랑 제일 가까운애로 넣자.... ㅠㅠ
+					int lastPassengerEnd = elevator.getPassengers().get(elevator.getPassengers().size() - 1).getEnd();
+					weights[i] = weights[i] > Math.abs(call.getStart() - lastPassengerEnd) ?  Math.abs(call.getStart() - lastPassengerEnd) : weights[i];
+				} else {
+					weights[i] = Math.abs(elevator.getFloor() - call.getStart());
+				}
+			}
+
+			int min = Integer.MAX_VALUE;
+			int minIndex = 0;
+			for (int i = 0; i < ELEVATOR_NUMBER; i++) {
+				int weight = weights[i];
+				if (min > weight) {
+					min = weight;
+					minIndex = i;
+				}
+			}
+
+			assignCalls.get(minIndex).add(call);
+		}
+
+		return assignCalls;
 	}
 
-	private static void executeEmployeeNumber() {
-		EmployeeNumber employeeNumber = new EmployeeNumber();
-		System.out.println(employeeNumber.getEmployeeNumber("EmployeeLog.txt", "10:00:00"));
+	//TODO 생각좀 잘해보장.
+	private static List<Command> calculateCommands(ElevatorStatus elevatorStatus, List<List<Passenger>> assignCalls) {
+		List<Command> commands = new ArrayList<>();
+		for (int i = 0; i < elevatorStatus.getElevators().size(); i++) {
+			Elevator elevator = elevatorStatus.getElevators().get(i);
+			Command command = new Command(elevator);
+			commands.add(command);
+			List<Passenger> passengers = elevator.getPassengers();
+
+			//승객이 없을때
+			if (passengers.isEmpty()) {
+				//기존 콜들에서 가장 먼저들어온애 태우러간다.
+
+				//기존 콜들도 없으면 걍 멈춰라~
+				if (assignCalls.get(i).isEmpty()) {
+					switch (elevator.getStatus()) {
+						case "STOPPED":
+							command.setCommand("STOP");
+							break;
+						case "UPWARD":
+							command.setCommand("STOP");
+							break;
+						case "DOWNWARD":
+							command.setCommand("STOP");
+							break;
+						case "OPENED":
+							command.setCommand("CLOSE");
+							break;
+					}
+					continue;
+				}
+
+				Passenger call = assignCalls.get(i).get(0);
+
+				int start = call.getStart();
+				int floor = elevator.getFloor();
+
+				if (start == floor) {
+					//같은층이면 태워야지!
+					switch (elevator.getStatus()) {
+						case "STOPPED" :
+							command.setCommand("OPEN");
+							break;
+						case "UPWARD" :
+							command.setCommand("STOP");
+							break;
+						case "DOWNWARD" :
+							command.setCommand("STOP");
+							break;
+						case "OPENED" :
+							command.setCommand("ENTER");
+							command.getCall_ids().add(call.getId());
+							assignCalls.get(i).remove(call);
+							for (Passenger assignCall : assignCalls.get(i)) {
+								if (assignCall.getStart() == floor) {
+									command.getCall_ids().add(assignCall.getId());
+
+									if (command.getCall_ids().size() == ELEVATOR_MAX_PEOPLE) {
+										break;
+									}
+								}
+							}
+							break;
+					}
+				} else if (start > floor) {
+					switch (elevator.getStatus()) {
+						case "STOPPED" :
+							command.setCommand("UP");
+							break;
+						case "UPWARD" :
+							command.setCommand("UP");
+							break;
+						case "DOWNWARD" :
+							command.setCommand("STOP");
+							break;
+						case "OPENED" :
+							command.setCommand("CLOSE");
+
+							for (Passenger assignCall : assignCalls.get(i)) {
+								if (elevator.getPassengers().size() == ELEVATOR_MAX_PEOPLE) {
+									break;
+								}
+
+								if (assignCall.getStart() == floor) {
+									command.setCommand("ENTER");
+									command.getCall_ids().add(assignCall.getId());
+								}
+							}
+							break;
+					}
+				} else {
+					switch (elevator.getStatus()) {
+						case "STOPPED" :
+							command.setCommand("DOWN");
+							break;
+						case "UPWARD" :
+							command.setCommand("STOP");
+							break;
+						case "DOWNWARD" :
+							command.setCommand("DOWN");
+							break;
+						case "OPENED" :
+							command.setCommand("CLOSE");
+
+							for (Passenger assignCall : assignCalls.get(i)) {
+								if (elevator.getPassengers().size() == ELEVATOR_MAX_PEOPLE) {
+									break;
+								}
+
+								if (assignCall.getStart() == floor) {
+									command.setCommand("ENTER");
+									command.getCall_ids().add(assignCall.getId());
+								}
+							}
+							break;
+					}
+				}
+			}
+			//승객이 있을때
+			else {
+				//일단 있는놈부터 내려준다.
+				int end = passengers.get(0).getEnd();
+				int floor = elevator.getFloor();
+
+				if (end == floor) {
+					switch (elevator.getStatus()) {
+						case "STOPPED" :
+							command.setCommand("OPEN");
+							break;
+						case "UPWARD" :
+							command.setCommand("STOP");
+							break;
+						case "DOWNWARD" :
+							command.setCommand("STOP");
+							break;
+						case "OPENED" :
+							//내려주고
+							command.setCommand("EXIT");
+
+							//내릴애들 다내려!
+							for (Passenger passenger : passengers) {
+								if (passenger.getEnd() == floor) {
+									command.getCall_ids().add(passenger.getId());
+								}
+							}
+							break;
+					}
+				} else if (end > floor) {
+					switch (elevator.getStatus()) {
+						case "STOPPED" :
+							command.setCommand("UP");
+							break;
+						case "UPWARD" :
+							command.setCommand("UP");
+							break;
+						case "DOWNWARD" :
+							command.setCommand("STOP");
+							break;
+						case "OPENED" :
+							//여긴 내릴애가 있으면 내리고 없으면 문닫고 출발~
+							boolean isExit = false;
+							for (Passenger passenger : passengers) {
+								if (passenger.getEnd() == floor) {
+									command.setCommand("EXIT");
+									command.getCall_ids().add(passenger.getId());
+									isExit = true;
+								}
+							}
+
+							if (isExit) {
+								break;
+							}
+
+							boolean isEnter = false;
+							//내릴애가없으면 태울수있으면 태우자
+							for (Passenger assignCall : assignCalls.get(i)) {
+								if (elevator.getPassengers().size() == ELEVATOR_MAX_PEOPLE) {
+									break;
+								}
+
+								if (assignCall.getStart() == floor) {
+									command.setCommand("ENTER");
+									command.getCall_ids().add(assignCall.getId());
+									isEnter = true;
+								}
+							}
+
+							if (isEnter) {
+								break;
+							}
+
+							command.setCommand("CLOSE");
+							break;
+					}
+				} else {
+					switch (elevator.getStatus()) {
+						case "STOPPED" :
+							command.setCommand("DOWN");
+							break;
+						case "UPWARD" :
+							command.setCommand("STOP");
+							break;
+						case "DOWNWARD" :
+							command.setCommand("DOWN");
+							break;
+						case "OPENED" :
+							//여긴 내릴애가 있으면 내리고 없으면 문닫고 출발~
+							boolean isExit = false;
+							for (Passenger passenger : passengers) {
+								if (passenger.getEnd() == floor) {
+									command.setCommand("EXIT");
+									command.getCall_ids().add(passenger.getId());
+									isExit = true;
+								}
+							}
+
+							if (isExit) {
+								break;
+							}
+
+							boolean isEnter = false;
+							//내릴애가없으면 태울수있으면 태우자
+							for (Passenger assignCall : assignCalls.get(i)) {
+								if (elevator.getPassengers().size() == ELEVATOR_MAX_PEOPLE) {
+									break;
+								}
+
+								if (assignCall.getStart() == floor) {
+									command.setCommand("ENTER");
+									command.getCall_ids().add(assignCall.getId());
+									isEnter = true;
+								}
+							}
+
+							if (isEnter) {
+								break;
+							}
+
+							command.setCommand("CLOSE");
+							break;
+					}
+				}
+			}
+		}
+
+		return commands;
 	}
 
-	private static void executeNumberCountCalculator() {
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Please enter the number you want to find (0~9)");
-		int inputNumber = scan.nextInt();
-		System.out.println("Please enter a range of numbers to find");
-		int findRange = scan.nextInt();
-		NumberCountCalculator numberCountCalculator = new NumberCountCalculator();
+	private static void onAction(ElevatorStatus elevatorStatus, List<Command> commands) throws IOException {
+		HttpPost request = new HttpPost(URL + "/action");
+		request.addHeader("X-Auth-Token", elevatorStatus.getToken());
+		request.addHeader("Content-Type", "application/json");
 
-		int numberCount = numberCountCalculator.calculateNumberCount(inputNumber, findRange);
+		Map<String, List<Command>> params = new HashMap<>();
+		params.put("commands", commands);
 
-		System.out.println("Number of appearances : " + numberCount);
+		String string = GSON.toJson(params);
+		System.out.println(string);
+		request.setEntity(new StringEntity(string));
+
+		HttpResponse httpResponse = httpClient.execute(request);
+		BufferedReader rd = new BufferedReader(new InputStreamReader(
+				httpResponse.getEntity().getContent()));
+
+		String response = "";
+		String str = "";
+		while ((str = rd.readLine()) != null) {
+			response += str;
+		}
+		System.out.println(response);
 	}
 
-	private static void executePrintSelfNumber() {
-		SelfNumber selfNumber = new SelfNumber();
-		selfNumber.printSelfNumber(500);
+	private static ElevatorStatus onCall(String token) throws IOException {
+		HttpGet request = new HttpGet(URL + "/oncalls");
+
+		request.addHeader("X-Auth-Token", token);
+
+		HttpResponse httpResponse = httpClient.execute(request);
+		return parseResponse(httpResponse, ElevatorStatus.class);
+	}
+
+	private static ElevatorStatus onStart() throws IOException {
+		HttpPost request = new HttpPost(URL + "/start/kmj/" + PROBLEM_NUMBER + "/" + ELEVATOR_NUMBER);
+		HttpResponse httpResponse = httpClient.execute(request);
+
+		ElevatorStatus elevatorStatus = parseResponse(httpResponse, ElevatorStatus.class);
+
+		return elevatorStatus;
+	}
+
+	private static<T> T parseResponse(HttpResponse httpResponse, Class type) throws IOException {
+		BufferedReader rd = new BufferedReader(new InputStreamReader(
+				httpResponse.getEntity().getContent()));
+
+		String response = "";
+		String str = "";
+		while ((str = rd.readLine()) != null) {
+			response += str;
+		}
+
+		System.out.println(response);
+		return (T) GSON.fromJson(response, type);
 	}
 }
