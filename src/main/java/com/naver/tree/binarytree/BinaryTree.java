@@ -2,6 +2,7 @@ package com.naver.tree.binarytree;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 import com.naver.tree.binarytree.model.Node;
 
@@ -39,6 +40,7 @@ public class BinaryTree {
 
 	public void postOrder() {
 		postOrder(root);
+		System.out.println("");
 	}
 
 	private void postOrder(Node node) {
@@ -48,7 +50,7 @@ public class BinaryTree {
 
 		postOrder(node.getLeftChild());
 		postOrder(node.getRightChild());
-		System.out.println(node.getValue());
+		System.out.print(node.getValue() + " > ");
 	}
 
 	public void levelOrder() {
@@ -106,5 +108,40 @@ public class BinaryTree {
 
 	public int getHeight() {
 		return (int)(Math.log(this.nodeNum) / Math.log(2)) + 1;
+	}
+
+
+	public void using1StackPostOrder() {
+		Stack<Node> stack = new Stack<>();
+
+		if (root == null) {
+			return;
+		}
+
+
+
+		Node current = root;
+		do {
+			while (current != null) {
+				if (current.getRightChild() != null) {
+					stack.push(current.getRightChild());
+				}
+				stack.push(current);
+				current = current.getLeftChild();
+			}
+
+			current = stack.pop();
+
+			if (current.getRightChild() != null && !stack.isEmpty() && current.getRightChild() == stack.peek()) {
+				stack.remove(current.getRightChild());
+				stack.push(current);
+				current = current.getRightChild();
+			} else {
+				System.out.print(current.getValue() + " > ");
+				current = null;
+			}
+		} while (!stack.isEmpty());
+
+		System.out.println("");
 	}
 }

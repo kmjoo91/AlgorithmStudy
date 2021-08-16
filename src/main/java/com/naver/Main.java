@@ -1,6 +1,6 @@
 package com.naver;
 /*
- *@(#)Main.java 2017.01.11
+ *@(#)StairNumbers.java 2017.01.11
  *
  * Copyright 2017 NHN Corp. All rights Reserved.
  * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
